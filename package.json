@@ -23,6 +23,7 @@
     "url": "https://github.com/mrcsmcln/laravel-elixir-svg/issues"
   },
   "dependencies": {
+    "gulp-changed": "^1.3.0",
     "gulp-svgmin": "^1.2.2"
   }
 }
