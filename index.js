@@ -9,6 +9,7 @@ _.mixin({
     deepExtend: require('underscore-deep-extend')(_)
 });
 
+$.changed = require('gulp-changed');
 $.svgmin = require('gulp-svgmin');
 
 /*
@@ -27,10 +28,16 @@ Elixir.extend('svg', function(src, output, options) {
     config.images.svg = {
         folder: 'images',
         outputFolder: 'img',
-        options: {}
+        options: {
+            plugins: [{
+                removeUselessDefs: false
+            }, {
+                cleanupIDs: false
+            }]
+        }
     };
 
-    _.deepExtend(config.images.options, options);
+    _.deepExtend(config.images.svg.options, options);
 
     var paths = prepGulpPaths(src, output);
 
@@ -50,7 +57,8 @@ Elixir.extend('svg', function(src, output, options) {
             .pipe(new Elixir.Notification('SVGs Minified!'))
         );
     })
-    .watch(paths.src.path)
+    .watch(paths.src.baseDir + '/**/*.svg')
+    .ignore(paths.output.path)
 });
 
 
@@ -65,5 +73,5 @@ Elixir.extend('svg', function(src, output, options) {
 var prepGulpPaths = function(src, output) {
     return new Elixir.GulpPaths()
         .src(src, config.get('assets.images.svg.folder'))
-        .output(output || config.get('public.images.svg.outputFolder'), '.');
+        .output(output || config.get('public.images.svg.outputFolder'), 'app.svg');
 }
